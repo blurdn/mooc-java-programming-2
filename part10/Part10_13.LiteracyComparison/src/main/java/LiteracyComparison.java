@@ -2,30 +2,43 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 public class LiteracyComparison {
-    
-    public static void main(String[] args) {
-        List<String> lines;
 
-        try {
-            lines = Files.readAllLines(Path.of("part10/Part10_13.LiteracyComparison/literacy.csv"));
+    public static void main(String[] args) {
+        List<LiteracyData> literacyDataList = parseLiteracy(
+                Path.of("part10/Part10_13.LiteracyComparison/literacy.csv")
+        );
+
+        for (LiteracyData record : literacyDataList) {
+            System.out.printf(
+                    Locale.ENGLISH,
+                    "%s (%d), %s, %.5f%n",
+                    record.country(), record.year(), record.sex(), record.literacy()
+            );
+        }
+    }
+
+    private static List<LiteracyData> parseLiteracy(Path path) {
+        try (var lines = Files.lines(path)) {
+            return lines.map(line -> line.split("\\s*,\\s*"))
+                    .map(LiteracyComparison::toLiteracyData)
+                    .sorted(Comparator.comparingDouble(LiteracyData::literacy))
+                    .toList();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
 
-        lines.stream()
-                .map(line -> line.split("\\s*,\\s*"))
-                .sorted((p1, p2) -> {
-                    return p1[5].compareTo(p2[5]);
-                })
-                .forEach(p -> {
-                    System.out.println(String.format("%s (%d), %s, %.5f",
-                            p[3], p[4],p[2].replace(" (%)", ""), p[5]));
-                });
+    private static LiteracyData toLiteracyData(String[] line) {
+        return new LiteracyData(
+                line[3],
+                Integer.parseInt(line[4]),
+                line[2].replace(" (%)", ""),
+                Double.parseDouble(line[5])
+        );
     }
 }
