@@ -1,5 +1,6 @@
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
@@ -10,13 +11,12 @@ public class LiteracyComparison {
 
     public static void main(String[] args) {
         List<LiteracyData> literacyDataList = parseLiteracy(
-                Path.of("part10/Part10_13.LiteracyComparison/literacy.csv")
+                Path.of("literacy.csv")
         );
 
         for (LiteracyData record : literacyDataList) {
             System.out.printf(
-                    Locale.ENGLISH,
-                    "%s (%d), %s, %.5f%n",
+                    "%s (%d), %s, %s%n",
                     record.country(), record.year(), record.sex(), record.literacy()
             );
         }
@@ -26,7 +26,7 @@ public class LiteracyComparison {
         try (var lines = Files.lines(path)) {
             return lines.map(line -> line.split("\\s*,\\s*"))
                     .map(LiteracyComparison::toLiteracyData)
-                    .sorted(Comparator.comparingDouble(LiteracyData::literacy))
+                    .sorted(Comparator.comparing(LiteracyData::literacy))
                     .toList();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -38,7 +38,7 @@ public class LiteracyComparison {
                 line[3],
                 Integer.parseInt(line[4]),
                 line[2].replace(" (%)", ""),
-                Double.parseDouble(line[5])
+                new BigDecimal(line[5].trim())
         );
     }
 }
