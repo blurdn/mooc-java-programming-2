@@ -2,17 +2,19 @@ package FlightControl.logic;
 
 import FlightControl.model.Airplane;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class FlightControl {
-    private final Set<Airplane> vehicles = new HashSet<>();
+    private final Map<String, Airplane> vehicles = new HashMap<>();
 
-    public void addVehicle(Airplane vehicle) {
-        vehicles.add(vehicle);
+    public void addVehicle(String id, Airplane airplane) {
+        vehicles.putIfAbsent(id, airplane);
     }
 
     public void printVehicles() {
-        vehicles.forEach(System.out::println);
+        vehicles.values().forEach(System.out::println);
     }
 }
