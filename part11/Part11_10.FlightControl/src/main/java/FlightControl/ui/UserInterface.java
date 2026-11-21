@@ -68,7 +68,7 @@ public class UserInterface {
     }
 
     private void addAirplane() {
-        System.out.print("Give the airplane airplane id: ");
+        System.out.print("Give the airplane id: ");
         String airplaneId = scanner.nextLine();
 
         System.out.print("Give the airplane capacity: ");
@@ -78,7 +78,7 @@ public class UserInterface {
     }
 
     private void addFlight() {
-        System.out.print("Give the airplane airplane id: ");
+        System.out.print("Give the airplane id: ");
         Airplane airplane = flightControl.getAirplane(scanner.nextLine());
 
         System.out.print("Give the departure airport id: ");
